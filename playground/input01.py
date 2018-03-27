@@ -1,0 +1,5 @@
+a,b,c,d=input("입력하세요:").split('/')
+print(a)
+print(b)
+print(c)
+print(d)
