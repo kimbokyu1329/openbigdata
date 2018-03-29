@@ -6,3 +6,4 @@ def say_nick(nick):
 
 say_nick("바보")
 say_nick("파란")
+1
