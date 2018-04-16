@@ -1,0 +1,3 @@
+In c you can store as much information as you want.
+In c you can connect pieces of information.
+In c you can model real-world situations.

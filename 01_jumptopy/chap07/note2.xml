@@ -1,0 +1,11 @@
+<note date="20180412" time="10:24">
+ <to bbb="aaa">bokyu</to>
+ <from>
+  <student name="Boris"/>
+  <student name="Isolat"/>
+  <student name="Walnut"/>
+  <student name="Joshua"/>
+ </from>
+ <heading>Reminder</heading>
+ <body>Don't forget me this weekend!</body>
+</note>
