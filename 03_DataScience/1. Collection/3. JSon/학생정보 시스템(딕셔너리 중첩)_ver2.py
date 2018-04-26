@@ -69,16 +69,13 @@ def fsearch(parameter) :
     index=[]
 def fsearch_on_course(parameter1,parameter2):
     global index
+    search=input(str_search)
     for i in range(len(course_system_list)):
         for j in range(len(course_system_list[i].get('total_course_info').get(parameter1))):
-            index.append(course_system_list[i].get('total_course_info').get(parameter1)[j].get(parameter2))
-    index=list(set(index))
-    if parameter2=="course_name":
-        print('현재 운영중인 강의명 : ',end='')
-    elif parameter2=="teacher" :
-        print("현재 수업을 진행 중인 강사: " ,end='')
-    for element in index :
-        print('['+element+'] ',end='')
+            if course_system_list[i].get('total_course_info').get(parameter1)[j].get(parameter2).find(search) >=0 :
+                index.append(i)
+    for i in index :
+        fread_std(i)
     print()
     index=[]
 ####update
@@ -107,11 +104,24 @@ def fupdate_course(parameter):
             change=input("바꾸실 값을 입력하세요: ")
             course_system_list[index_from_id].get('total_course_info').get('learnig_course_info')[change_num][parameter]=change
 
-
-
-
-with open('.\\ITT_Student.json','r',encoding='utf8') as ITT :
-    ITT_data=json.load(ITT)
+path='.'
+file='\\ITT_Student.json'
+while True :
+    try :
+        with open(path+file,'r',encoding='utf8') as ITT :
+            ITT_data=json.load(ITT)
+            course_system_list=ITT_data
+        break
+    except :
+        print("파일을 찾을 수 없습니다. 아래 메뉴를 선택하세요")
+        sel_fileerr_num=int(input("1.현재 경로에 새 파일 생성 \n2.경로 변경해서 다시 찾기 "))
+        if sel_fileerr_num==1:
+            f=open(path+file,'w')
+            f.close()
+            course_system_list=[]
+            break
+        elif sel_fileerr_num ==2 :
+            path = input("변경된 경로를 입력하세요 (예 : c:\\user\\USER25\\Desktop) :")
 
 str_start_menu ="""1. 학생 정보입력\n2. 학생 정보조회\n3. 학생 정보수정\n4. 학생 정보삭제\n5. 프로그램 종료\n메뉴를 선택하세요: """
 str_read_menu ="""아래 메뉴를 선택하세요\n1. 전체 학생정보 조회\n--- 검색 조건 선택 ---\n2. ID검색\n3. 이름 검색\n4. 나이 검색\n5. 주소 검색\n6. 과거 수강 횟수 검색\n7. 현재 강의를 수강중인 학생\n8. 현재 수강중인 강의명\n9. 현재 수강 강사\n10. 이전 메뉴\n메뉴를 선택하세요: """
@@ -120,13 +130,10 @@ str_update_munu_5="1. 강의 코드\n2. 강의명\n3. 강사\n4. 개강일\n5. �
 str_delete_menu="삭제 유형을 선택하세요.\n1. 전체 삭제\n2. 현재 수강 중인 특정 과목정보 삭제\n3. 이전 메뉴\n메뉴 번호를 선택하세요: "
 str_search="검색어를 입력하세요 :"
 
-
-course_system_list=ITT_data
 std_dic={}
 total_course_dic={}
 learning_course_list=[]
-id_count=len(ITT_data)
-print(id_count)
+id_count=len(course_system_list)
 index=[]
 count=0
 while True:
@@ -248,6 +255,6 @@ while True:
             print()
             continue
         pass
-with open('.\\ITT_Student.json','w',encoding='utf8') as outfile :
+with open(path+file,'w',encoding='utf8') as outfile :
     retJson= json.dumps(course_system_list,indent=4,sort_keys=True,ensure_ascii=False)
     outfile.write(retJson)

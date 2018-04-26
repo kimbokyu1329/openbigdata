@@ -17,6 +17,5 @@ for element in root.findall('item'):
 nene_table= DataFrame(result,columns=('store','sido','gungu','store_address'))
 nene_table.to_csv('nene.csv',encoding='utf8',mode='w',index=True)
 print("End")
-f=open('.\\nene_index.txt','w')
-f.write(str(file_count))
-f.close()
+
+
