@@ -52,7 +52,7 @@ def main():
     nEndYear=2017
 
     for year in range(nStartYear,nEndYear):
-        for month in range(1,13):
+        for month in range(1,2):
             yyyymm="{0}{1:0>2}".format(str(year),str(month))
             for i in national_code_dic.values():
                 national_code=str(i)
