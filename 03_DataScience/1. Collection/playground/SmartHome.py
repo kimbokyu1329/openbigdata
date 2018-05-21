@@ -76,7 +76,9 @@ def smart_mode():
         print("현재 인공지능 모드: ", end='')
         if g_AI_Mode == True:
             print("작동")
-            close_window()
+            close_window(False)
+            hum(False)
+            dehum(False)
         else: print("중지")
 
     elif menu_num == 3:
@@ -129,13 +131,13 @@ def Simulation_mode() :
     si_menu_num=int(input("시뮬레이션 할 메뉴를 선택하세요. :"))
     if si_menu_num==1 :
         jsonData_simul['RN1']=100
-        close_window(1)
+        close_window(True)
     elif si_menu_num==2 :
         jsonData_simul['REH']=10
-        hum(1)
+        hum(True)
     elif si_menu_num ==3 :
         jsonData_simul['REH'] = 75
-        dehum(1)
+        dehum(True)
     g_AI_Mode=prev
 
 def search():
@@ -160,7 +162,7 @@ def search():
         url="https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=%EC%B6%94%EC%B2%9C%EB%93%9C%EB%9D%BC%EB%A7%88&oquery=%EC%B6%94%EC%B2%9C%EB%93%9C%EB%9D%BC%EB%A7%88+%EC%98%81%ED%99%94&tqi=TXqVnspVuERsscB15HRssssssR4-047974"
         response=urllib.request.urlopen(url)
         bsData=str(BeautifulSoup(response.read().decode("utf8"),'html.parser'))
-        p=re.compile("\<a[^\>]*[\>]([^\<]*)\<\/a\>\s\<\/strong\>")
+        p=re.compile("(?<=\<h4)\<a[^\>]*[\>]([^\<]*)\<\/a\>\s\<\/strong\>")
         print(p.findall(bsData))
     elif search_num == 3 :
         url="http://news.naver.com/main/ranking/popularDay.nhn?rankingType=popular_day"
@@ -178,8 +180,7 @@ with open ("카테고리밸류.txt",'r',encoding='utf8') as infile2 :
 for i in range(0,len(categoryData)-1,2):
     cateDic[categoryData[i]]=categoryData[i+1]
 
-def scheduler() :
-    threading.
+def scheduler() :pass
 
 
 

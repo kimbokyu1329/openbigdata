@@ -33,28 +33,28 @@ def getNatVisitor(yyyymm,nat_cd,ed_cd):
         return json.loads(retData)
 
 def main():
+    # 국가코드로 딕셔너리 생성
     with open('.\\national_code.txt','r',encoding='utf8') as infile :
         national_code_list=list(map(lambda x: x.rstrip().replace(' ',''), infile.readlines()))
 
     national_code_list[0]="000=미상"
     national_code_str=str(national_code_list)
-    national_code_str=national_code_str[1:-1]
-    national_code_str=national_code_str.replace('\'','').replace(',','').replace('=','')
-    p=re.compile("(\d{3})([\w]*)\s")
+    p = re.compile("[\[]?\'(\d{3})\=([\w]*)\'")
     national_code_dic={}
     national_code_str_list=p.findall(national_code_str)
+    # 국가코드 : 국가명
     for i in range(len(national_code_str_list)):
-        national_code_dic[national_code_str_list[i][1]]=national_code_str_list[i][0]
+        national_code_dic[national_code_str_list[i][0]]=national_code_str_list[i][1]
 
     jsonResult=[]
     ed_cd='E'
-    nStartYear=2016
-    nEndYear=2017
+    nStartYear=2017
+    nEndYear=2018
 
     for year in range(nStartYear,nEndYear):
-        for month in range(1,2):
+        for month in range(12,13):
             yyyymm="{0}{1:0>2}".format(str(year),str(month))
-            for i in national_code_dic.values():
+            for i in national_code_dic.keys():
                 national_code=str(i)
                 jsonData=getNatVisitor(yyyymm,national_code,ed_cd)
                 try:
@@ -65,21 +65,15 @@ def main():
                         print('%s_%s:%s' %(krName,yyyymm,iTotalVisit))
                         jsonResult.append({'nat_name':krName,"nat_cd":national_code,'yyyymm':yyyymm,'visit_cnt':iTotalVisit})
                 except:
-                    print(national_code)
+                    print("해당 국가의 한국 관광객에 대한 탐색결과가 없습니다.: [" ,national_code_dic[national_code],"]")
     cnVisit=[]
     VisitYM=[]
-    index=[]
 
-    i=0
     for item in jsonResult:
-        index.append(i)
         VisitYM.append(item['yyyymm'])
         cnVisit.append(item['visit_cnt'])
-    # with open('%s(%s)_해외방문객정보_%d_%d.json'%(krName,national_code,nStartYear,nEndYear-1),'w',encoding="utf8") as outfile:
-    #     retJson = json.dumps(jsonResult,indent=4,sort_keys=True,ensure_ascii=False)
-    #     outfile.write(retJson)
     visit_rank={}
-    for i in range (len(jsonResult)):
+    for i in range (len(jsonResult)):  # 방문자 카운팅
         try:
             visit_rank[jsonResult[i]['nat_name']]+=int(jsonResult[i]['visit_cnt'])
         except:
@@ -91,17 +85,5 @@ def main():
         retJson= json.dumps(data_result,indent=4,sort_keys=True,ensure_ascii=False)
         outfile.write(retJson)
 
-
 if __name__=='__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
