@@ -45,3 +45,4 @@ for input_file in glob.glob(os.path.join(path_to_folder,'*.*')):
                     count_of_item_numbers +=1
                 line_counter+=1
 
+#
