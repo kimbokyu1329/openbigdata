@@ -22,9 +22,9 @@ line_counter=0
 count_of_item_numbers=0
 for input_file in glob.glob(os.path.join(path_to_folder,'*.*')):
     file_counter+=1
-    if input_file.split(',')[1] =='csv':
+    if input_file.split('.')[1] =='csv':
         with open(input_file,'r',newline='') as csv_in_file:
-            fileheader=csv.reader(csv_in_file)
+            filereader=csv.reader(csv_in_file)
             header=next(filereader)
             for row in filereader:
                 row_of_output =[]
@@ -34,7 +34,7 @@ for input_file in glob.glob(os.path.join(path_to_folder,'*.*')):
                         row_of_output.append(cell_value)
                     elif column ==3:
                         cell_value =\
-                        str(row[column]).lstrip('$').replace(',','').splite(',')[0].strip()
+                        str(row[column]).lstrip('$').replace(',','').split('.')[0].strip()
                         row_of_output.append(cell_value)
                     else :
                         cell_value = str(row[column]).strip()
@@ -44,5 +44,36 @@ for input_file in glob.glob(os.path.join(path_to_folder,'*.*')):
                     filewriter.writerow(row_of_output)
                     count_of_item_numbers +=1
                 line_counter+=1
+    elif input_file.split('.')[1] =='xls' or input_file.split('.')[1] =='xlsx':
+        workbook=open_workbook(input_file)
+        for worksheet in workbook.sheets() :
+            try:
+                header = worksheet.row_values(0)
+            except IndexError:
+                pass
+            for row in range(1,worksheet.nrows):
+                row_of_output = []
+                for column in range(len(header)):
+                    if column <3:
+                        cell_value = str(worksheet.cell_value(row,column)).strip()
+                        row_of_output.append(cell_value)
+                    elif column ==3:
+                        cell_value =str(worksheet.cell_value(row,column)).split('.')[0].strip()
+                        row_of_output.append(cell_value)
+                    else:
+                        cell_value=xldate_as_tuple(worksheet.cell(row,column).value,workbook.datemode)
+                        cell_value=str(date(*cell_value[0:3])).strip()
+                        row_of_output.append(cell_value)
+                row_of_output.append(os.path.basename(input_file))
+                row_of_output.append(worksheet.name)
+                if str(worksheet.cell(row,0).value).split('.')[0].strip() in item_numbers_to_find:
+                    filewriter.writerow(row_of_output)
+                    count_of_item_numbers +=1
+                line_counter +=1
+print("number of files: {}".format(file_counter))
+print("number of lines: {}".format(line_counter))
+print('number of item numbers: {}'.format(count_of_item_numbers))
+
+
 
 #
